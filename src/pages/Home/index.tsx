@@ -1,12 +1,72 @@
-import { Link } from "react-router-dom";
+import { FormEvent, useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import styles from "./Home.module.css";
 import { BsSearch } from "react-icons/bs";
 
+interface CoinsProps {
+  name: string;
+  id: string;
+  image: string;
+  marketCapUsd: string;
+  priceUsd: string;
+  changePercent24Hr: string;
+  symbol: string;
+  formatedPrice: string;
+  formatedMarket: string;
+}
+
+interface DataProps {
+  data: CoinsProps[];
+}
+
 const Home = () => {
+  const [coins, setCoins] = useState<CoinsProps[]>([]);
+  const [inputValue, setInputValue] = useState("");
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    function getData() {
+      fetch("https://api.coincap.io/v2/assets")
+        .then((res) => res.json())
+        .then((data: DataProps) => {
+          const coinsData = data.data.slice(0, 15);
+
+          const price = Intl.NumberFormat("pt-BR", {
+            style: "currency",
+            currency: "BRL",
+          });
+
+          const formatResult = coinsData.map((item) => {
+            const formated = {
+              ...item,
+              formatedPrice: price.format(Number(item.priceUsd)),
+              formatedMarket: price.format(Number(item.marketCapUsd)),
+            };
+            return formated;
+          });
+          setCoins(formatResult);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+    getData();
+  }, []);
+
+  function handleSearch(e: FormEvent) {
+    e.preventDefault();
+    if (inputValue === "") return;
+    navigate(`/detail/${inputValue}`);
+  }
+
   return (
     <main className={styles.container}>
-      <form className={styles.form}>
-        <input type="text" placeholder="Digite o símbolo da moeda: BTC ..." />
+      <form className={styles.form} onSubmit={handleSearch}>
+        <input
+          type="text"
+          placeholder="Digite o símbolo da moeda: BTC ..."
+          onChange={(e) => setInputValue(e.target.value)}
+        />
         <button type="submit">
           <BsSearch size={30} color="#fff" />
         </button>
@@ -22,22 +82,37 @@ const Home = () => {
           </tr>
         </thead>
         <tbody id="tbody">
-          <tr className={styles.tr}>
-            <td className={styles.tdLabel} data-label="moeda">
-              <Link to={"/detail/btc"} className={styles.link}>
-                <span className={styles.link}>Bitcoin</span> | BTC
-              </Link>
-            </td>
-            <td className={styles.tdLabel} data-label="mercado">
-              R$ 1999
-            </td>
-            <td className={styles.tdLabel} data-label="preço">
-              R$ 40.500
-            </td>
-            <td className={styles.tdProfit} data-label="volume">
-              <span>- 5.3</span>
-            </td>
-          </tr>
+          {coins.map((coin) => {
+            const formatedPercent = Number(coin.changePercent24Hr).toFixed(2);
+
+            return (
+              <tr key={coin.name} className={styles.tr}>
+                <td className={styles.tdLabel} data-label="moeda">
+                  <Link to={`/detail/${coin.symbol}`} className={styles.link}>
+                    {" "}
+                    <span className={styles.link}>{coin.name}</span> |{" "}
+                    {coin.symbol}
+                  </Link>
+                </td>
+                <td className={styles.tdLabel} data-label="mercado">
+                  {coin.formatedMarket}
+                </td>
+                <td className={styles.tdLabel} data-label="preço">
+                  {coin.formatedPrice}
+                </td>
+                <td
+                  className={
+                    parseFloat(formatedPercent) >= 0
+                      ? styles.tdProfit
+                      : styles.tdLoss
+                  }
+                  data-label="volume"
+                >
+                  <span>{coin.changePercent24Hr}</span>
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </main>
