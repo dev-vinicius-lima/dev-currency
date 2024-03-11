@@ -46,6 +46,7 @@ const Detail = () => {
             ...coinData,
             formatedPrice: price.format(Number(coinData.priceUsd)),
             formatedMarket: price.format(Number(coinData.marketCapUsd)),
+            changePercent24Hr: Number(coinData.changePercent24Hr).toFixed(2),
           };
 
           setDetail(resultData);
@@ -77,7 +78,7 @@ const Detail = () => {
           {detail?.formatedPrice}
         </p>
         <p>
-          <strong>Delta 24H: </strong>
+          <strong>Volume: </strong>
           <span
             className={
               Number(detail?.changePercent24Hr) >= 0

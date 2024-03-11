@@ -83,13 +83,14 @@ const Home = () => {
         </thead>
         <tbody id="tbody">
           {coins.map((coin) => {
-            const formatedPercent = Number(coin.changePercent24Hr).toFixed(2);
+            const changePercent24HrFormatted = Number(
+              coin.changePercent24Hr
+            ).toFixed(2);
 
             return (
               <tr key={coin.name} className={styles.tr}>
                 <td className={styles.tdLabel} data-label="moeda">
                   <Link to={`/assets/${coin.id}`} className={styles.link}>
-                    {" "}
                     <span className={styles.link}>{coin.name}</span> |{" "}
                     {coin.symbol}
                   </Link>
@@ -102,13 +103,13 @@ const Home = () => {
                 </td>
                 <td
                   className={
-                    parseFloat(formatedPercent) >= 0
+                    parseFloat(changePercent24HrFormatted) >= 0
                       ? styles.tdProfit
                       : styles.tdLoss
                   }
                   data-label="volume"
                 >
-                  <span>{coin.changePercent24Hr}</span>
+                  <span>{changePercent24HrFormatted}</span>
                 </td>
               </tr>
             );
