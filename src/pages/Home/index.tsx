@@ -88,7 +88,7 @@ const Home = () => {
             return (
               <tr key={coin.name} className={styles.tr}>
                 <td className={styles.tdLabel} data-label="moeda">
-                  <Link to={`/detail/${coin.symbol}`} className={styles.link}>
+                  <Link to={`/assets/${coin.id}`} className={styles.link}>
                     {" "}
                     <span className={styles.link}>{coin.name}</span> |{" "}
                     {coin.symbol}

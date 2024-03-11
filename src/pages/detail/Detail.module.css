@@ -1,0 +1,36 @@
+.container {
+  padding: 0 14px;
+  color: #fff;
+}
+
+.center {
+  text-align: center;
+  margin-bottom: 14px;
+}
+
+.content {
+  max-width: 400px;
+  background-color: #0f0f0f;
+  margin: 24px auto;
+  padding: 2rem;
+  border-radius: 10px;
+}
+
+.content p {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  border-bottom: 1px solid #cccccc6e;
+}
+
+.content p:not(:last-of-type) {
+  margin-bottom: 20px;
+}
+
+.profit {
+  color: #12f98a;
+}
+
+.loss {
+  color: #f91257;
+}
