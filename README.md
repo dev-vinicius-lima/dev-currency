@@ -11,9 +11,7 @@ O projeto Currency é uma aplicação que permite converter valores entre difere
 - Suporte a várias moedas
 
 ## Como Usar
-
-
-
+- clique na moeda desejada irá aparecer os detalhes 
 
 ## Licença
 
